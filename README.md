@@ -1,28 +1,37 @@
 # ActsAsResource
-Short description and motivation.
+
+Generate rails restful controller for all models.
 
 ## Usage
-How to use my plugin.
+
+```ruby
+gem 'activeresource'
+gem 'acts_as_resource', github: 'zhulux/acts_as_resource'
+
+# routes.rb
+mount ActsAsResource::Engine => '/activeresource'
+
+# user.rb
+class User < ActiveResource::Base
+  self.site = 'http://127.0.0.1:2000/activeresource'
+end
+```
+
+```bash
+./bin/rails c
+```
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'acts_as_resource'
+gem 'acts_as_resource', github: 'zhulux/acts_as_resource'
 ```
 
 And then execute:
 ```bash
 $ bundle
 ```
-
-Or install it yourself as:
-```bash
-$ gem install acts_as_resource
-```
-
-## Contributing
-Contribution directions go here.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
