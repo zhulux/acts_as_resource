@@ -1,11 +1,17 @@
 module ActsAsResource
-  class ResourcesController < ActionController::API
+  class ResourcesController < ApplicationController
     before_action :set_clazz
     before_action :set_resource, only: %i[show update destroy]
 
     # GET /resources
     def index
-      @resources = @clazz.all
+      filter_params = params.to_unsafe_h.keys.select { |i| i[/.*_id/] }
+      @resources = if !filter_params.empty? && filter_params.size == 1
+                     relation = filter_params[0]
+                     @clazz.where(relation => params[relation]).all
+                   else
+                     @clazz.all
+                   end
 
       render json: @resources
     end
