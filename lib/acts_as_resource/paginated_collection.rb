@@ -4,7 +4,7 @@ require 'kaminari'
 module ActsAsResource
   class PaginatedCollection < ActiveResource::Collection
     # Our custom array to handle pagination methods
-    attr_accessor :paginatable_array
+    attr_accessor :paginatable_array, :http_response
 
     # The initialize method will receive the ActiveResource parsed result
     # and set @elements.
@@ -15,19 +15,17 @@ module ActsAsResource
 
     # Retrieve response headers and instantiate a paginatable array
     def setup_paginatable_array
+      @http_response = begin
+                         ActiveResource::Base.connection.response
+                       rescue StandardError
+                         {}
+                       end
       @paginatable_array ||= begin
-        response = begin
-                     ActiveResource::Base.connection.response
-                   rescue StandardError
-                     {}
-                   end
-
         options = {
-          limit: response['Pagination-Limit'].try(:to_i),
-          offset: response['Pagination-Offset'].try(:to_i),
-          total_count: response['Pagination-TotalCount'].try(:to_i)
+          limit: @http_response['Pagination-Limit'].try(:to_i),
+          offset: @http_response['Pagination-Offset'].try(:to_i),
+          total_count: @http_response['Pagination-TotalCount'].try(:to_i)
         }
-
         Kaminari::PaginatableArray.new(elements, options)
       end
     end
