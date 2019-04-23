@@ -15,11 +15,7 @@ module ActsAsResource
 
     # Retrieve response headers and instantiate a paginatable array
     def setup_paginatable_array
-      @http_response = begin
-                         ActiveResource::Base.connection.response
-                       rescue StandardError
-                         {}
-                       end
+      @http_response = ActiveResource::Base.connection.response
       @paginatable_array ||= begin
         options = {
           limit: @http_response['Pagination-Limit'].try(:to_i),
