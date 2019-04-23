@@ -1,5 +1,5 @@
 require 'acts_as_resource/engine'
+require 'acts_as_resource/paginated_collection'
 
 module ActsAsResource
-  # Your code goes here...
 end

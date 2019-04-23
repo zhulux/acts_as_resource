@@ -11,14 +11,21 @@ gem 'acts_as_resource', github: 'zhulux/acts_as_resource'
 # routes.rb
 mount ActsAsResource::Engine => '/activeresource'
 
-# user.rb
-class User < ActiveResource::Base
+# application_resource.rb
+require 'acts_as_resource/paginated_collection'
+
+class ApplicationResource < ActiveResource::Base
   self.site = 'http://127.0.0.1:2000/activeresource'
+  self.collection_parser = ActsAsResource::PaginatedCollection
+end
+# user.rb
+class User < ApplicationResource
 end
 ```
 
 ```bash
 ./bin/rails c
+User.all(params: { page: 1, per_page: 1 })
 ```
 
 ## Installation
