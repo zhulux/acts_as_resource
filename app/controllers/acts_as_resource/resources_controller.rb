@@ -16,9 +16,9 @@ module ActsAsResource
       if params[:page].present? && params[:per_page].present?
         @resources = @resources.page(params[:page]).per(params[:per_page])
 
-        response.set_header('Pagination-Limit', @resources.limit_value.to_s)
-        response.set_header('Pagination-Offset', @resources.offset_value.to_s)
-        response.set_header('Pagination-TotalCount', @resources.total_count.to_s)
+        response.set_header('X-limit', @resources.limit_value.to_s)
+        response.set_header('X-offset', @resources.offset_value.to_s)
+        response.set_header('X-total', @resources.total_count.to_s)
       end
       render json: @resources
     end
