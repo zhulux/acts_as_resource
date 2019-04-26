@@ -44,21 +44,7 @@ users.my_response.to_hash
 ## Note
 
 The delete method is hard delete.
-You can [discard](https://github.com/jhawthorn/discard) gem for soft delete.
-
-```ruby
-# application_record.rb
-class ApplicationRecord < ActiveRecord::Base
-  self.abstract_class = true
-  def destroy
-    self.discard
-  end
-
-  def delete
-    self.discard
-  end
-end
-```
+You can use [paranoia](https://github.com/rubysherpas/paranoia) gem for soft delete.
 
 ## Installation
 Add this line to your application's Gemfile:
