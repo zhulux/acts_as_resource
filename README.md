@@ -20,12 +20,44 @@ end
 # user.rb
 class User < ApplicationResource
 end
+
+class UsersController < ApplicationController
+  # params: page
+  # params: per_page
+  def index
+    users = User.all(params: params)
+    @users = Kaminari::PaginatableArray.new(users, {
+      limit: users.my_response['X-limit'].to_i,
+      offset: users.my_response['X-offset'].to_i,
+      total_count: users.my_response['X-total'].to_i
+    })
+  end
+end
 ```
 
 ```bash
 ./bin/rails c
 users = User.all(params: { page: 1, per_page: 1 })
 users.my_response.to_hash
+```
+
+## Note
+
+The delete method is hard delete.
+You can [discard](https://github.com/jhawthorn/discard) gem for soft delete.
+
+```ruby
+# application_record.rb
+class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+  def destroy
+    self.discard
+  end
+
+  def delete
+    self.discard
+  end
+end
 ```
 
 ## Installation
