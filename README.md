@@ -6,8 +6,8 @@ Generate rails restful controller for all models.
 
 ```ruby
 gem 'activeresource'
-gem 'activeresource-response'
-gem 'acts_as_resource', github: 'zhulux/acts_as_resource'
+gem 'activeresource-response' # pagination
+gem 'acts_as_resource', github: 'zhulux/acts_as_resource' # widly used restful controller
 
 # routes.rb
 mount ActsAsResource::Engine => '/activeresource'
@@ -61,6 +61,11 @@ $ bundle
 ## [Association support](https://github.com/rails/activeresource#associations)
 
 ```bash
+./bin/rails c
+user = User.first
+user.investors
+
+## logs
 Started GET "/activeresource/users.json" for 127.0.0.1 at 2019-04-17 10:58:51 +0800
 Processing by ActsAsResource::ResourcesController#index as JSON
   Parameters: {"resource_name"=>"users"}
