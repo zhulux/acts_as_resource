@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActsAsResource
   class ResourcesController < ApplicationController
     before_action :set_clazz
@@ -5,10 +7,16 @@ module ActsAsResource
 
     # GET /resources
     def index
-      filter_params = params.to_unsafe_h.keys.select { |i| i[/.*_id/] }
-      @resources = if !filter_params.empty? && filter_params.size == 1
-                     relation = filter_params[0]
-                     @clazz.where(relation => params[relation]).all
+      filter_params = params.to_unsafe_h.keys
+      @resources = if !filter_params.empty?
+                     # support where
+                     h = {}
+                     filter_params.each do |fp|
+                       next unless @clazz.column_names.include?(fp)
+
+                       h[fp] = params[fp]
+                     end
+                     @clazz.where(h).all
                    else
                      @clazz.all
                    end
