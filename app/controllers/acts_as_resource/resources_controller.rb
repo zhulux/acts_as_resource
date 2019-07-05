@@ -16,8 +16,8 @@ module ActsAsResource
 
                        # note: do not use string: nil query
                        # just support integer: nil -> integer IS NULL
-                       if @clazz.columns_hash[fp].type == :integer
-                         h[fp] = nil if params[fp] == '' # fix nil sql
+                       if @clazz.columns_hash[fp].type == :integer && params[fp] == ''
+                         h[fp] = nil # fix nil sql
                        else
                          h[fp] = params[fp]
                        end
