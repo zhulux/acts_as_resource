@@ -14,7 +14,13 @@ module ActsAsResource
                      filter_params.each do |fp|
                        next unless @clazz.column_names.include?(fp)
 
-                       h[fp] = params[fp]
+                       # note: do not use string: nil query
+                       # just support integer: nil -> integer IS NULL
+                       if @clazz.columns_hash[fp].type == :integer
+                         h[fp] = nil if params[fp] == '' # fix nil sql
+                       else
+                         h[fp] = params[fp]
+                       end
                      end
                      @clazz.where(h).all
                    else
