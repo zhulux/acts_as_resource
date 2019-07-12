@@ -16,11 +16,11 @@ module ActsAsResource
 
                        # note: do not use string: nil query
                        # just support integer: nil -> integer IS NULL
-                       if @clazz.columns_hash[fp].type == :integer && params[fp] == ''
-                         h[fp] = nil # fix nil sql
-                       else
-                         h[fp] = params[fp]
-                       end
+                       h[fp] = if @clazz.columns_hash[fp].type == :integer && params[fp] == ''
+                                 nil # fix nil sql
+                               else
+                                 params[fp]
+                               end
                      end
                      @clazz.where(h).all
                    else
@@ -81,7 +81,7 @@ module ActsAsResource
 
     # Only allow a trusted parameter "white list" through.
     def resource_params
-      params.require(@model_name.underscore).permit(@clazz.column_names)
+      params.permit(@clazz.column_names)
     end
   end
 end
