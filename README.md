@@ -103,6 +103,17 @@ Model.where(sorted)
 Model.where(sorted: 1)
 ```
 
+```
+Started GET "/activeresource/investment_preferences.json?filter_location%5B%5D=3&filter_location%5B%5D=4&filter_sector%5B%5D=1&filter_sector%5B%5D=2" for 127.0.0.1 at 2019-12-02 14:54:38 +0800
+Processing by ActsAsResource::ResourcesController#index as JSON
+  Parameters: {"filter_location"=>["3", "4"], "filter_sector"=>["1", "2"], "resource_name"=>"investment_preferences"}
+Creating scope :filter_location. Overwriting existing method InvestmentPreference.filter_location.
+Creating scope :filter_sector. Overwriting existing method InvestmentPreference.filter_sector.
+  InvestmentPreference Load (47.3ms)  SELECT "investment_preferences".* FROM "investment_preferences"
+  ↳ config/initializers/render_views_patch.rb:7
+Completed 200 OK in 171ms (Views: 86.9ms | ActiveRecord: 80.3ms)
+```
+
 ## [Association support](https://github.com/rails/activeresource#associations)
 
 ```bash
@@ -125,15 +136,6 @@ Processing by ActsAsResource::ResourcesController#index as JSON
   Investor Load (44.0ms)  SELECT "investors".* FROM "investors" WHERE "investors"."user_id" = $1  [["user_id", 1]]
   ↳ config/initializers/render_views_patch.rb:7
 Completed 200 OK in 64ms (Views: 1.4ms | ActiveRecord: 45.2ms)
-
-Started GET "/activeresource/investment_preferences.json?filter_location%5B%5D=3&filter_location%5B%5D=4&filter_sector%5B%5D=1&filter_sector%5B%5D=2" for 127.0.0.1 at 2019-12-02 14:54:38 +0800
-Processing by ActsAsResource::ResourcesController#index as JSON
-  Parameters: {"filter_location"=>["3", "4"], "filter_sector"=>["1", "2"], "resource_name"=>"investment_preferences"}
-Creating scope :filter_location. Overwriting existing method InvestmentPreference.filter_location.
-Creating scope :filter_sector. Overwriting existing method InvestmentPreference.filter_sector.
-  InvestmentPreference Load (47.3ms)  SELECT "investment_preferences".* FROM "investment_preferences"
-  ↳ config/initializers/render_views_patch.rb:7
-Completed 200 OK in 171ms (Views: 86.9ms | ActiveRecord: 80.3ms)
 ```
 
 Also, you can use the another way.
