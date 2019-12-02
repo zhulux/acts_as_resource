@@ -8,9 +8,11 @@ module ActsAsResource
     # GET /resources
     def index
       filter_params = params.to_unsafe_h.keys
+      filter_params.delete('format') # params[:format] is not in consideration
+      h = {}
+      # Column attrs
       @resources = if !filter_params.empty?
                      # support where
-                     h = {}
                      filter_params.each do |fp|
                        next unless @clazz.column_names.include?(fp)
 
@@ -27,9 +29,23 @@ module ActsAsResource
                      @clazz.all
                    end
 
+      # Scopes
+      params_diff = filter_params - h.keys
+      if params_diff.present?
+        scopes = []
+        params_diff.each do |diff|
+          is_scope = @clazz.send(:valid_scope_name?, diff)
+          scopes << diff if is_scope
+        end
+        if scopes.present?
+          scope_hash = params.select{|filter| scopes.include?(filter)}
+          @resources = send_scope_chain(@clazz, scope_hash)
+        end
+      end
+
+      # Pagination
       if params[:page].present? && params[:per_page].present?
         @resources = @resources.page(params[:page]).per(params[:per_page])
-
         response.set_header('X-limit', @resources.limit_value.to_s)
         response.set_header('X-offset', @resources.offset_value.to_s)
         response.set_header('X-total', @resources.total_count.to_s)
@@ -82,6 +98,11 @@ module ActsAsResource
     # Only allow a trusted parameter "white list" through.
     def resource_params
       params.permit(@clazz.column_names)
+    end
+
+    # Call model scopes with parameters
+    def send_scope_chain(model, scope_hash)
+      scope_hash.keys.inject(model) {|resource, scope| resource.send(scope, scope_hash[scope]) }
     end
   end
 end
